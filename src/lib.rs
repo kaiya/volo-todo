@@ -1,19 +1,19 @@
 #![feature(generic_associated_types)]
 #![feature(type_alias_impl_trait)]
 
-use std::{collections::HashMap};
+use std::collections::HashMap;
 
-use volo_gen::volotodo::{Item, self};
+use volo_gen::volotodo::{Item, ItemService, GetItemRequest, GetItemResponse};
 
 pub struct S;
 
 #[volo::async_trait]
-impl volo_gen::volotodo::ItemService for S {
+impl ItemService for S {
     // 这部分是我们需要增加的代码
     async fn get_item(
         &self,
-        _req: volo_grpc::Request<volo_gen::volotodo::GetItemRequest>,
-    ) -> core::result::Result<volo_grpc::Response<volo_gen::volotodo::GetItemResponse>, volo_grpc::Status>
+        _req: volo_grpc::Request<GetItemRequest>,
+    ) -> core::result::Result<volo_grpc::Response<GetItemResponse>, volo_grpc::Status>
     {
         let mut m = HashMap::new();
         m.insert("key".to_string(), "value".to_string());
@@ -24,6 +24,6 @@ impl volo_gen::volotodo::ItemService for S {
             // extra: HashMap::new(),
             extra: m,
         };
-        Ok(volo_grpc::Response::new(volotodo::GetItemResponse { item: it.into() }))
+        Ok(volo_grpc::Response::new(GetItemResponse { item: it.into() }))
     }
 }
